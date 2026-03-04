@@ -1,6 +1,9 @@
+import os
 import mysql.connector
 from mysql.connector import Error
-from config import DB_CONFIG
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class Database:
@@ -18,7 +21,14 @@ class Database:
 
     def connect(self):
         try:
-            self.connection = mysql.connector.connect(**DB_CONFIG)
+            self.connection = mysql.connector.connect(
+                host=os.getenv("DB_HOST", "localhost"),
+                port=int(os.getenv("DB_PORT", 3306)),
+                user=os.getenv("DB_USER", "root"),
+                password=os.getenv("DB_PASSWORD", ""),
+                database=os.getenv("DB_NAME", "blessedbill"),
+                charset=os.getenv("DB_CHARSET", "utf8mb4"),
+            )
             print("✅ Подключение к MySQL успешно")
         except Error as e:
             print(f"❌ Ошибка подключения: {e}")
